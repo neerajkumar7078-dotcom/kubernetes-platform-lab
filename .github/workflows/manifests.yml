@@ -1,0 +1,21 @@
+name: Kubernetes manifest checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: azure/setup-kubectl@v4
+        with:
+          version: v1.34.0
+      - name: Render manifests with Kustomize
+        run: kubectl kustomize . > "$RUNNER_TEMP/rendered.yaml"
